@@ -21,7 +21,8 @@ export class PostComponent implements OnInit {
 
 
   loading: boolean = true;
-  displayTagFilterError: boolean = false;
+  displayError: boolean = false;
+  errorMessage: string = '';
 
   newTagFilter: string = '';
   tagFilters: string[] = [this.defaultTagFilter];
@@ -44,28 +45,34 @@ export class PostComponent implements OnInit {
 
       this.getPosts();
     } else {
-      this.displayTagFilterErrorMessage();
+      this.displayErrorMessage("Tag filter already applied.");
     }
   }
 
-  onSortByChange(event: any) {
+  onSortByChange(event: Event) {
     const target = event.target as HTMLInputElement;
-    this.sortBy = target.value;
+    this.sortBy = target.value === "null" ? null : target.value;
 
     this.getPosts();
   }
+
 
   onSortByDirectionChange(event: Event) {
     const target = event.target as HTMLInputElement;
-    this.sortDirection = target.value;
+    this.sortDirection = target.value === "null" ? null : target.value;
 
     this.getPosts();
   }
 
-  displayTagFilterErrorMessage() {
-    this.displayTagFilterError = true;
+  displayErrorMessage(message: string) {
+    if (!message) {
+      return;
+    }
+    this.displayError = true;
+    this.errorMessage = message;
     setTimeout(() => {
-      this.displayTagFilterError = false;
+      this.displayError = false;
+      this.errorMessage = '';
     }, 2000);
   }
 
@@ -83,8 +90,11 @@ export class PostComponent implements OnInit {
         this.options = response.meta;
         this.loading = false;
       },
-      error: _ => {
+      error: e => {
         this.loading = false;
+        this.posts = [];
+        this.options = null;
+        this.displayErrorMessage('Failed to fetch posts');
       }
     })
   }

@@ -23,7 +23,7 @@
 
       <div class="col-3">
         <select class="form-select" (change)="onSortByChange($event)">
-          <option disabled selected [value]="null">Select Sort Option</option>
+          <option selected [value]="null">Select Sort Option</option>
           <option *ngFor="let sort of options?.sortOptions" [value]="sort">
             {{ sort }}
           </option>
@@ -32,7 +32,11 @@
 
       <div class="col-3">
         <select class="form-select" (change)="onSortByDirectionChange($event)">
-          <option [selected]="direction === 'asc'" *ngFor="let direction of options?.sortDirections" [value]="direction">
+          <option
+            [selected]="direction === 'asc'"
+            *ngFor="let direction of options?.sortDirections"
+            [value]="direction"
+          >
             {{ direction.toUpperCase() }}
           </option>
         </select>
@@ -59,11 +63,11 @@
 
   <div class="container">
     <div
-      *ngIf="displayTagFilterError"
+      *ngIf="displayError"
       class="alert alert-warning text-center m-2"
       role="alert"
     >
-      Tag Filter Already Exists
+      {{ errorMessage }}
     </div>
 
     <div
