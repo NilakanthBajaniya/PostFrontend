@@ -1,0 +1,105 @@
+<div class="container">
+  <div class="container">
+    <div class="row mt-3">
+      <div class="col-6">
+        <div class="input-group">
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="newTagFilter"
+            placeholder="Add Tag Filter"
+            aria-label="Input group example"
+            aria-describedby="btnGroupAddon"
+          />
+          <button
+            class="input-group-text btn btn-primary"
+            [disabled]="loading || !newTagFilter || newTagFilter.length === 0"
+            (click)="addTagFilter()"
+          >
+            Add
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex flex-row align-items-center mt-2">
+      <span>Applied Tag Filters: &nbsp;</span>
+      <div *ngFor="let tagFilter of tagFilters; let i = index" class="mb-1">
+        <div class="input-group">
+          <span class="badge d-flex text-bg-success me-1">
+            <span class="px-1">{{ tagFilter }}</span>
+            <span
+              *ngIf="tagFilter !== defaultTagFilter"
+              (click)="removeTagFilter(tagFilter)"
+            >
+              <i class="bi bi-trash-fill"></i>
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div
+      *ngIf="displayTagFilterError"
+      class="alert alert-warning text-center m-2"
+      role="alert"
+    >
+      Tag Filter Already Exists
+    </div>
+
+    <div
+      *ngIf="loading"
+      class="alert alert-secondary text-center m-2"
+      role="alert"
+    >
+      Loading...
+    </div>
+  </div>
+
+  <div class="container" *ngIf="!loading">
+    <div class="row mt-2">
+      <div class="flex-row">
+        <div class="float-end">
+          <span>Total Posts: {{ posts.length }}</span>
+        </div>
+      </div>
+    </div>
+
+    <table class="table table-bordered mt-2">
+      <thead>
+        <tr>
+          <th scope="col">No</th>
+          <th scope="col">Author</th>
+          <th scope="col">Likes</th>
+          <th scope="col">Popularity</th>
+          <th scope="col">Reads</th>
+          <th scope="col">Tags</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="posts && posts.length > 0">
+        <tr *ngFor="let post of posts; let index = index">
+          <td>{{ index + 1 }}</td>
+          <td>{{ post.author }}</td>
+          <td>{{ post.likes }}</td>
+          <td>{{ post.popularity }}</td>
+          <td>{{ post.reads }}</td>
+          <td>
+            <span
+              class="badge text-bg-secondary m-1"
+              *ngFor="let tag of post.tags"
+              >{{ tag }}</span
+            >
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="!posts || posts.length === 0">
+      <div class="alert alert-secondary text-center" role="alert">
+        No Posts found.
+      </div>
+    </div>
+  </div>
+</div>
