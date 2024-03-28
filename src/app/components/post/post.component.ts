@@ -4,6 +4,7 @@ import { PostService } from 'src/app/services/post.service';
 import { Post } from 'src/app/interfaces/post';
 import { PostResponse } from 'src/app/interfaces/post-response';
 import { FormsModule } from '@angular/forms';
+import { Meta } from 'src/app/interfaces/meta';
 
 @Component({
   selector: 'app-post',
@@ -16,12 +17,17 @@ export class PostComponent implements OnInit {
   readonly defaultTagFilter: string = this.postService.defaultTagFilter;
 
   posts: Post[] = [];
+  options: Meta | null = null;
+
 
   loading: boolean = true;
   displayTagFilterError: boolean = false;
 
   newTagFilter: string = '';
   tagFilters: string[] = [this.defaultTagFilter];
+
+  sortBy: string | null = null;
+  sortDirection: string | null = null;
 
   constructor(
     private postService: PostService,
@@ -42,6 +48,20 @@ export class PostComponent implements OnInit {
     }
   }
 
+  onSortByChange(event: any) {
+    const target = event.target as HTMLInputElement;
+    this.sortBy = target.value;
+
+    this.getPosts();
+  }
+
+  onSortByDirectionChange(event: Event) {
+    const target = event.target as HTMLInputElement;
+    this.sortDirection = target.value;
+
+    this.getPosts();
+  }
+
   displayTagFilterErrorMessage() {
     this.displayTagFilterError = true;
     setTimeout(() => {
@@ -57,9 +77,10 @@ export class PostComponent implements OnInit {
   getPosts() {
     this.loading = true;
 
-    this.postService.getPosts(this.tagFilters).subscribe({
+    this.postService.getPosts(this.tagFilters, this.sortBy, this.sortDirection).subscribe({
       next: (response: PostResponse) => {
         this.posts = response.posts;
+        this.options = response.meta;
         this.loading = false;
       },
       error: _ => {

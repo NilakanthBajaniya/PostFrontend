@@ -1,7 +1,7 @@
 <div class="container">
   <div class="container">
     <div class="row mt-3">
-      <div class="col-6">
+      <div class="col-4">
         <div class="input-group">
           <input
             type="text"
@@ -20,6 +20,23 @@
           </button>
         </div>
       </div>
+
+      <div class="col-3">
+        <select class="form-select" (change)="onSortByChange($event)">
+          <option disabled selected [value]="null">Select Sort Option</option>
+          <option *ngFor="let sort of options?.sortOptions" [value]="sort">
+            {{ sort }}
+          </option>
+        </select>
+      </div>
+
+      <div class="col-3">
+        <select class="form-select" (change)="onSortByDirectionChange($event)">
+          <option [selected]="direction === 'asc'" *ngFor="let direction of options?.sortDirections" [value]="direction">
+            {{ direction.toUpperCase() }}
+          </option>
+        </select>
+      </div>
     </div>
 
     <div class="d-flex flex-row align-items-center mt-2">
@@ -29,7 +46,7 @@
           <span class="badge d-flex text-bg-success me-1">
             <span class="px-1">{{ tagFilter }}</span>
             <span
-              *ngIf="tagFilter !== defaultTagFilter"
+              *ngIf="tagFilters.length > 1"
               (click)="removeTagFilter(tagFilter)"
             >
               <i class="bi bi-trash-fill"></i>
@@ -70,7 +87,7 @@
     <table class="table table-bordered mt-2">
       <thead>
         <tr>
-          <th scope="col">No</th>
+          <th scope="col">Id</th>
           <th scope="col">Author</th>
           <th scope="col">Likes</th>
           <th scope="col">Popularity</th>
@@ -79,8 +96,8 @@
         </tr>
       </thead>
       <tbody *ngIf="posts && posts.length > 0">
-        <tr *ngFor="let post of posts; let index = index">
-          <td>{{ index + 1 }}</td>
+        <tr *ngFor="let post of posts">
+          <td>{{ post.id }}</td>
           <td>{{ post.author }}</td>
           <td>{{ post.likes }}</td>
           <td>{{ post.popularity }}</td>
