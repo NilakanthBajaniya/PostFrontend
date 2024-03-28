@@ -8,9 +8,14 @@ const routes: Routes = [
     component: HomeComponent,
   },
   {
-    'path': 'posts',
+    path: 'posts',
     loadComponent: () => import('./components/post/post.component')
       .then(p => p.PostComponent),
+  },
+  {
+    path: '**',
+    component: HomeComponent,
+    pathMatch: 'full'
   }
 ];
 
